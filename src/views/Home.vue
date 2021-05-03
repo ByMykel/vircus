@@ -8,7 +8,7 @@
 
         <search-bar
             :selected="selected"
-            @search-artist="(query = $event), fetchData($event)"
+            @search-artist="query = $event"
             @selected="changeSelected($event)"
         ></search-bar>
 
@@ -69,6 +69,10 @@ export default {
         };
     },
 
+    watch: {
+        query: "fetchData",
+    },
+
     mounted() {
         window.addEventListener("scroll", () => {
             let bottomOfWindow =
@@ -90,8 +94,8 @@ export default {
             this.fetchData(this.query);
         },
 
-        async fetchData(name) {
-            if (name === "") {
+        async fetchData() {
+            if (this.query === "") {
                 this.items = [];
                 return;
             }
@@ -100,13 +104,13 @@ export default {
 
             switch (this.selected) {
                 case 1:
-                    data = await Spotify.getArtists(name);
+                    data = await Spotify.getArtists(this.query);
                     break;
                 case 2:
-                    data = await Spotify.getTracks(name);
+                    data = await Spotify.getTracks(this.query);
                     break;
                 case 3:
-                    data = await Spotify.getAlbums(name);
+                    data = await Spotify.getAlbums(this.query);
                     break;
             }
 
