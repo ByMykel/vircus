@@ -148,6 +148,7 @@ export default {
 .album-container {
     margin-top: 10px;
     overflow: hidden;
+    width: 100%;
 }
 
 .album-container-header {

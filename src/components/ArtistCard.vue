@@ -186,6 +186,7 @@ export default {
 .artist-container {
     margin-top: 10px;
     overflow: hidden;
+    width: 100%;
 }
 
 .artist-container-header {

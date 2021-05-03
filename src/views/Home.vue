@@ -13,27 +13,33 @@
         ></search-bar>
 
         <div v-if="selected === 1">
-            <artist-card
-                v-for="artist in items.items"
-                :key="artist.id"
-                :artist="artist"
-            ></artist-card>
+            <transition-group name="list-items">
+                <artist-card
+                    v-for="artist in items.items"
+                    :key="artist.id"
+                    :artist="artist"
+                ></artist-card>
+            </transition-group>
         </div>
 
         <div v-else-if="selected === 2">
-            <track-card
-                v-for="track in items.items"
-                :key="track.id"
-                :track="track"
-            ></track-card>
+            <transition-group name="list-items">
+                <track-card
+                    v-for="track in items.items"
+                    :key="track.id"
+                    :track="track"
+                ></track-card>
+            </transition-group>
         </div>
 
         <div v-else-if="selected === 3">
-            <album-card
-                v-for="album in items.items"
-                :key="album.id"
-                :album="album"
-            ></album-card>
+            <transition-group name="list-items">
+                <album-card
+                    v-for="album in items.items"
+                    :key="album.id"
+                    :album="album"
+                ></album-card>
+            </transition-group>
         </div>
     </div>
 </template>
@@ -139,6 +145,7 @@ export default {
     width: 100%;
     height: 100%;
     padding-bottom: 20px;
+    position: relative;
 }
 
 .logo-spotify {
@@ -146,6 +153,33 @@ export default {
     margin: 0 auto;
     padding: 30px 0;
     width: 150px;
+}
+
+.list-items-enter-active,
+.list-items-leave-active {
+    transition: opacity 0.5s;
+}
+
+.list-items-enter,
+.list-items-leave-to {
+    opacity: 0;
+}
+
+.list-items-move {
+    transition: transform 0.5s;
+}
+
+.list-items-item {
+    transition: opacity 0s;
+}
+
+.list-items-enter,
+.list-items-leave-to {
+    opacity: 0;
+}
+
+.list-items-leave-active {
+    position: absolute;
 }
 
 @media (min-width: 640px) {

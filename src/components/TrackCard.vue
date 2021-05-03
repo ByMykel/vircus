@@ -154,6 +154,7 @@ export default {
     height: 90px;
     overflow: hidden;
     padding: 4px;
+    width: 100%;
 }
 
 .track-container-small {
