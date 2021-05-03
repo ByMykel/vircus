@@ -21,7 +21,9 @@
                 </div>
 
                 <div class="icon-arrow-container">
-                    <div class="icon-arrow-background" @click="loadAlbumData()">
+                    <div v-if="loading" class="lds-circle"><div></div></div>
+
+                    <div v-else class="icon-arrow-background" @click="loadAlbumData()">
                         <!-- heroicons: chevron-down -->
                         <svg
                             v-if="!show"
@@ -60,17 +62,25 @@
             </div>
         </div>
 
+        <transition
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @after-enter="afterEnter"
+            @before-leave="beforeLeave"
+            @leave="leave"
+        >
         <div v-show="show" class="album-container-body">
-            <div v-if="loading" class="message">Loading...</div>
+            <div style="padding: 0 10px 10px 10px">
+                <div v-if="noDataMessage" class="message">No data</div>
 
-            <div v-if="noDataMessage" class="message">No data</div>
-
-            <track-album-card
-                v-for="track in tracks.items"
-                :key="track.id"
-                :track="track"
-            ></track-album-card>
+                <track-album-card
+                    v-for="track in tracks.items"
+                    :key="track.id"
+                    :track="track"
+                ></track-album-card>
+            </div>
         </div>
+        </transition>
     </div>
 </template>
 
@@ -122,15 +132,15 @@ export default {
 
     methods: {
         async loadAlbumData() {
+            if (!this.fetchedData) {
+                this.loading = true;
+                this.tracks = await Spotify.getAlbum(this.album.id);
+                this.loading = false;
+
+                this.fetchedData = true;
+            }
+
             this.show = !this.show;
-
-            if (this.fetchedData) return;
-
-            this.fetchedData = true;
-
-            this.loading = true;
-            this.tracks = await Spotify.getAlbum(this.album.id);
-            this.loading = false;
         },
 
         image() {
@@ -139,6 +149,26 @@ export default {
             }
 
             return " ";
+        },
+
+        beforeEnter(el) {
+            el.style.height = "0";
+        },
+
+        enter(el) {
+            el.style.height = el.scrollHeight + "px";
+        },
+
+        afterEnter(el) {
+            el.style.height = el.scrollHeight + "px";
+        },
+
+        beforeLeave(el) {
+            el.style.height = el.scrollHeight + "px";
+        },
+
+        leave(el) {
+            el.style.height = "0";
         },
     },
 };
@@ -159,9 +189,9 @@ export default {
 }
 
 .album-container-body {
-    border-top: 1px solid #535353;
+    overflow: hidden;
     background: #535353;
-    padding: 0 10px 10px 10px;
+    transition: 0.4s ease;
 }
 
 .album-image {
@@ -219,6 +249,37 @@ export default {
     padding-top: 10px;
 }
 
+.lds-circle {
+    display: inline-block;
+    transform: translateZ(1px);
+}
+
+.lds-circle > div {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #535353;
+    animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes lds-circle {
+    0%,
+    100% {
+        animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    }
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(1800deg);
+        animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    }
+    100% {
+        transform: rotateY(3600deg);
+    }
+}
+
 @media (min-width: 640px) {
     .album-container {
         border-radius: 5px;
@@ -242,6 +303,11 @@ export default {
     }
 
     .icon-arrow {
+        width: 30px;
+        height: 30px;
+    }
+
+    .lds-circle > div {
         width: 30px;
         height: 30px;
     }
