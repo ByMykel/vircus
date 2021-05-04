@@ -1,6 +1,6 @@
 <template>
     <div
-        :class="{ 'new-disc': track.track_number === 1 }"
+        :class="{ 'new-disc': track.track_number === 1 && track.disc_number !== 1 }"
         class="track-container"
     >
         <span v-if="track.explicit" title="Explicit content">
@@ -140,7 +140,7 @@ export default {
     position: relative;
     display: flex;
     background: #212121;
-    margin-top: 8px;
+    margin: 6px 6px;
     height: 60px;
     border-radius: 5px;
     overflow: hidden;

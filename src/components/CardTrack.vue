@@ -159,8 +159,9 @@ export default {
 
 .track-container-small {
     height: 60px;
-    margin-top: 8px;
+    margin: 6px 6px;
     border-radius: 5px;
+    width: auto;
 }
 
 .track-image {

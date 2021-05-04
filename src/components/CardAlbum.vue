@@ -74,15 +74,13 @@
             @leave="leave"
         >
             <div v-show="show" class="album-container-body">
-                <div style="padding: 0 10px 10px 10px">
-                    <div v-if="noDataMessage" class="message">No data</div>
+                <div v-if="noDataMessage" class="message">No data</div>
 
-                    <card-track-small
-                        v-for="track in tracks.items"
-                        :key="track.id"
-                        :track="track"
-                    ></card-track-small>
-                </div>
+                <card-track-small
+                    v-for="track in tracks.items"
+                    :key="track.id"
+                    :track="track"
+                ></card-track-small>
             </div>
         </transition>
     </div>
@@ -250,7 +248,7 @@ export default {
 .message {
     color: #ffffff;
     text-align: center;
-    padding-top: 10px;
+    padding: 10px 0;
 }
 
 .lds-circle {
