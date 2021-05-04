@@ -14,31 +14,31 @@
 
         <div v-if="selected === 1">
             <transition-group name="list-items">
-                <artist-card
+                <card-artist
                     v-for="artist in items.items"
                     :key="artist.id"
                     :artist="artist"
-                ></artist-card>
+                ></card-artist>
             </transition-group>
         </div>
 
         <div v-else-if="selected === 2">
             <transition-group name="list-items">
-                <track-card
+                <card-track
                     v-for="track in items.items"
                     :key="track.id"
                     :track="track"
-                ></track-card>
+                ></card-track>
             </transition-group>
         </div>
 
         <div v-else-if="selected === 3">
             <transition-group name="list-items">
-                <album-card
+                <card-album
                     v-for="album in items.items"
                     :key="album.id"
                     :album="album"
-                ></album-card>
+                ></card-album>
             </transition-group>
         </div>
     </div>
@@ -47,18 +47,18 @@
 <script>
 import Spotify from "../Spotify";
 import SearchBar from "../components/SearchBar.vue";
-import ArtistCard from "../components/ArtistCard.vue";
-import TrackCard from "../components/TrackCard.vue";
-import AlbumCard from "../components/AlbumCard.vue";
+import CardArtist from "../components/CardArtist.vue";
+import CardTrack from "../components/CardTrack.vue";
+import CardAlbum from "../components/CardAlbum.vue";
 
 export default {
     name: "Home",
 
     components: {
         SearchBar,
-        ArtistCard,
-        TrackCard,
-        AlbumCard,
+        CardArtist,
+        CardTrack,
+        CardAlbum,
     },
 
     data() {

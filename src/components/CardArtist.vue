@@ -1,29 +1,61 @@
 <template>
-    <div class="album-container">
-        <div class="album-container-header">
+    <div class="artist-container">
+        <div class="artist-container-header">
             <div>
-                <img :src="image()" :alt="album.name" class="album-image" />
+                <img
+                    v-if="image"
+                    :src="image"
+                    :alt="artist.name"
+                    class="artist-image"
+                />
+
+                <div v-else class="artist-image-default">
+                    <!-- heroicons: user -->
+                    <svg
+                        class="icon-user"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        ></path>
+                    </svg>
+                </div>
             </div>
 
-            <div class="album-details">
+            <div class="artist-details">
                 <div>
                     <div>
                         <a
-                            :href="album.external_urls.spotify"
-                            class="album-name"
-                            v-text="album.name"
+                            :href="artist.external_urls.spotify"
+                            class="artist-name"
+                            v-text="artist.name"
                         ></a>
+
+                        <span
+                            :title="popularityCircle"
+                            :class="circleColor"
+                            class="popularity-circle"
+                        >
+                        </span>
                     </div>
 
-                    <span class="album-info" v-text="albumArtists"></span>
-
-                    <span class="album-info" v-text="albumInfo"></span>
+                    <div class="artist-followers" v-text="totalFollowers"></div>
                 </div>
 
                 <div class="icon-arrow-container">
                     <div v-if="loading" class="lds-circle"><div></div></div>
 
-                    <div v-else class="icon-arrow-background" @click="loadAlbumData()">
+                    <div
+                        v-else
+                        class="icon-arrow-background"
+                        @click="loadArtistData()"
+                    >
                         <!-- heroicons: chevron-down -->
                         <svg
                             v-if="!show"
@@ -69,34 +101,35 @@
             @before-leave="beforeLeave"
             @leave="leave"
         >
-        <div v-show="show" class="album-container-body">
-            <div style="padding: 0 10px 10px 10px">
-                <div v-if="noDataMessage" class="message">No data</div>
+            <div v-show="show" class="artist-container-body">
+                <div style="padding: 0 10px 10px 10px">
+                    <div v-if="noDataMessage" class="message">No data</div>
 
-                <track-album-card
-                    v-for="track in tracks.items"
-                    :key="track.id"
-                    :track="track"
-                ></track-album-card>
+                    <card-track
+                        v-for="track in tracks"
+                        :key="track.id"
+                        :track="track"
+                        small
+                    ></card-track>
+                </div>
             </div>
-        </div>
         </transition>
     </div>
 </template>
 
 <script>
 import Spotify from "../Spotify";
-import TrackAlbumCard from "./TrackAlbumCard.vue";
+import CardTrack from "./CardTrack.vue";
 
 export default {
-    name: "AlbumCard",
+    name: "ArtistCard",
 
     components: {
-        TrackAlbumCard,
+        CardTrack,
     },
 
     props: {
-        album: Object,
+        artist: Object,
     },
 
     data() {
@@ -109,18 +142,24 @@ export default {
     },
 
     computed: {
-        albumArtists() {
-            return this.album.artists.map((artist) => artist.name).join(" · ");
+        popularityCircle() {
+            return "Popularity " + this.artist.popularity;
         },
 
-        albumInfo() {
-            return (
-                " · " +
-                this.album.release_date +
-                " · " +
-                this.album.total_tracks +
-                " total tracks"
-            );
+        circleColor() {
+            if (this.artist.popularity >= 70) {
+                return "popularity-circle-green";
+            }
+
+            if (this.artist.popularity >= 40) {
+                return "popularity-circle-orange";
+            }
+
+            return "popularity-circle-red";
+        },
+
+        totalFollowers() {
+            return this.artist.followers.total + " followers";
         },
 
         noDataMessage() {
@@ -128,27 +167,27 @@ export default {
                 !this.loading && this.fetchedData && this.tracks.length === 0
             );
         },
+
+        image() {
+            if (this.artist.images.length > 0) {
+                return this.artist.images[0].url;
+            }
+
+            return "";
+        },
     },
 
     methods: {
-        async loadAlbumData() {
+        async loadArtistData() {
             if (!this.fetchedData) {
                 this.loading = true;
-                this.tracks = await Spotify.getAlbum(this.album.id);
+                this.tracks = await Spotify.getArtistsTopTracks(this.artist.id);
                 this.loading = false;
 
                 this.fetchedData = true;
             }
 
             this.show = !this.show;
-        },
-
-        image() {
-            if (this.album.images.length > 0) {
-                return this.album.images[0].url;
-            }
-
-            return " ";
         },
 
         beforeEnter(el) {
@@ -175,52 +214,82 @@ export default {
 </script>
 
 <style scoped>
-.album-container {
+.artist-container {
     margin-top: 10px;
     overflow: hidden;
     width: 100%;
 }
 
-.album-container-header {
+.artist-container-header {
     display: flex;
     background: #212121;
     height: 90px;
     padding: 4px;
 }
 
-.album-container-body {
+.artist-container-body {
     overflow: hidden;
     background: #535353;
     transition: 0.4s ease;
 }
 
-.album-image {
+.artist-image {
     width: 82px;
     height: 100%;
     object-fit: cover;
     border-radius: 5px;
 }
 
-.album-details {
+.artist-image-default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 82px;
+    height: 100%;
+    background: #121212;
+    border-radius: 5px;
+}
+
+.artist-details {
     width: 100%;
     margin-left: 10px;
     display: flex;
     justify-content: space-between;
 }
 
-.album-name {
+.artist-name {
     color: #ffffff;
     font-size: 13px;
     text-decoration: none;
 }
 
-.album-name:hover {
+.artist-name:hover {
     color: #1db954;
 }
 
-.album-info {
+.artist-followers {
     color: #b3b3b3;
     font-size: 10px;
+}
+
+.popularity-circle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    margin-left: 5px;
+}
+
+.popularity-circle-green {
+    background: #1db954;
+}
+
+.popularity-circle-orange {
+    background: #f59b23;
+}
+
+.popularity-circle-red {
+    background: #e61e32;
 }
 
 .icon-arrow-container {
@@ -241,6 +310,12 @@ export default {
     width: 20px;
     height: 20px;
     cursor: pointer;
+}
+
+.icon-user {
+    width: 30px;
+    height: 30px;
+    color: #535353;
 }
 
 .message {
@@ -281,30 +356,43 @@ export default {
 }
 
 @media (min-width: 640px) {
-    .album-container {
+    .artist-container {
         border-radius: 5px;
     }
 
-    .album-container-header {
+    .artist-container-header {
         height: 160px;
     }
 
-    .album-image {
+    .artist-image {
         width: 152px;
-        height: 100%;
     }
 
-    .album-name {
+    .artist-image-default {
+        width: 152px;
+    }
+
+    .artist-name {
         font-size: 19px;
     }
 
-    .album-info {
+    .artist-followers {
         font-size: 16px;
+    }
+
+    .popularity-circle {
+        width: 10px;
+        height: 10px;
     }
 
     .icon-arrow {
         width: 30px;
         height: 30px;
+    }
+
+    .icon-user {
+        width: 60px;
+        height: 60px;
     }
 
     .lds-circle > div {
