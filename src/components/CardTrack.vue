@@ -30,6 +30,7 @@
                 <div>
                     <a
                         :href="track.external_urls.spotify"
+                        target="_blank"
                         :class="{ 'track-name-small': small }"
                         class="track-name"
                         v-text="track.name"

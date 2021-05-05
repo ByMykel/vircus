@@ -10,6 +10,7 @@
                     <div>
                         <a
                             :href="album.external_urls.spotify"
+                            target="_blank"
                             class="album-name"
                             v-text="album.name"
                         ></a>

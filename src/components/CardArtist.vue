@@ -33,6 +33,7 @@
                     <div>
                         <a
                             :href="artist.external_urls.spotify"
+                            target="_blank"
                             class="artist-name"
                             v-text="artist.name"
                         ></a>
