@@ -2,14 +2,19 @@
     <div class="artist-container">
         <div class="artist-container-header">
             <div>
+                <div
+                    v-show="image && showSkeletonImage"
+                    class="artist-image-skeleton"
+                ></div>
                 <img
-                    v-if="image"
+                    v-show="image && !showSkeletonImage"
                     :src="image"
                     :alt="artist.name"
                     class="artist-image"
+                    @load="showSkeletonImage = false"
                 />
 
-                <div v-else class="artist-image-default">
+                <div v-if="!image" class="artist-image-default">
                     <!-- heroicons: user -->
                     <svg
                         class="icon-user"
@@ -137,6 +142,7 @@ export default {
             fetchedData: false,
             tracks: [],
             loading: false,
+            showSkeletonImage: true,
         };
     },
 
@@ -237,6 +243,14 @@ export default {
     height: 100%;
     object-fit: cover;
     border-radius: 5px;
+}
+
+.artist-image-skeleton {
+    width: 82px;
+    height: 100%;
+    background: #535353;
+    border-radius: 5px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .artist-image-default {
@@ -354,6 +368,16 @@ export default {
     }
 }
 
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
 @media (min-width: 640px) {
     .artist-container {
         border-radius: 5px;
@@ -364,6 +388,10 @@ export default {
     }
 
     .artist-image {
+        width: 152px;
+    }
+
+    .artist-image-skeleton {
         width: 152px;
     }
 

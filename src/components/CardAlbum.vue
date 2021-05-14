@@ -2,7 +2,14 @@
     <div class="album-container">
         <div class="album-container-header">
             <div>
-                <img :src="image()" :alt="album.name" class="album-image" />
+                <div v-show="showSkeletonImage" class="album-image-skeleton"></div>
+                <img
+                    v-show="!showSkeletonImage"
+                    :src="image()"
+                    :alt="album.name"
+                    class="album-image"
+                    @load="showSkeletonImage = false"
+                />
             </div>
 
             <div class="album-details">
@@ -108,6 +115,7 @@ export default {
             fetchedData: false,
             tracks: [],
             loading: false,
+            showSkeletonImage: true,
         };
     },
 
@@ -204,6 +212,14 @@ export default {
     border-radius: 5px;
 }
 
+.album-image-skeleton {
+    width: 82px;
+    height: 100%;
+    background: #535353;
+    border-radius: 5px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .album-details {
     width: 100%;
     margin-left: 10px;
@@ -283,6 +299,15 @@ export default {
     }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
 @media (min-width: 640px) {
     .album-container {
         border-radius: 5px;
@@ -294,7 +319,10 @@ export default {
 
     .album-image {
         width: 152px;
-        height: 100%;
+    }
+
+    .album-image-skeleton {
+        width: 152px;
     }
 
     .album-name {

@@ -17,11 +17,14 @@
         </span>
 
         <div>
+            <div v-show="showSkeletonImage" :class="[ small ? 'track-image-small-skeleton' : 'track-image-skeleton' ]"></div>
             <img
+                v-show="!showSkeletonImage"
                 :class="{ 'track-image-small': small }"
                 :src="image()"
                 :alt="track.name"
                 class="track-image"
+                @load="showSkeletonImage = false"
             />
         </div>
 
@@ -111,6 +114,7 @@ export default {
         return {
             audio: new Audio(this.track.preview_url),
             playing: false,
+            showSkeletonImage: true,
         };
     },
 
@@ -172,8 +176,25 @@ export default {
     border-radius: 5px;
 }
 
+.track-image-skeleton {
+    width: 82px;
+    height: 100%;
+    background: #535353;
+    border-radius: 5px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .track-image-small {
     width: 52px;
+}
+
+
+.track-image-small-skeleton {
+    width: 52px;
+    height: 100%;
+    background: #535353;
+    border-radius: 5px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .track-name {
@@ -245,6 +266,16 @@ export default {
     display: flex;
 }
 
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
 @media (min-width: 640px) {
     .track-container {
         border-radius: 5px;
@@ -268,7 +299,15 @@ export default {
         width: 152px;
     }
 
+    .track-image-skeleton {
+        width: 152px;
+    }
+
     .track-image-small {
+        width: 92px;
+    }
+
+    .track-image-small-skeleton {
         width: 92px;
     }
 
