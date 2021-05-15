@@ -5,6 +5,15 @@
             class="logo-spotify"
             alt="logo-spotify"
         />
+        <p class="informational-text">
+            Simple project that allow you to search for artists, tracks and
+            albums, made for practice purposes. All the metadata is retrieved
+            from
+            <a href="https://www.spotify.com/" target="_blank">Spotify</a>
+            &nbsp;
+            <a href="https://developer.spotify.com/" target="_blank">Web API</a
+            >.
+        </p>
         <search-bar
             :selected="selected"
             @search-artist="query = $event"
@@ -198,6 +207,22 @@ export default {
     position: absolute;
 }
 
+.informational-text {
+    color: #b3b3b3;
+    text-align: center;
+    width: 90%;
+    margin: 0 auto 20px auto;
+    font-size: 14px;
+}
+
+.informational-text > a {
+    color: #b3b3b3;
+}
+
+.informational-text > a:hover {
+    color: #1db954;
+}
+
 @media (min-width: 640px) {
     .container {
         width: 95%;
@@ -208,11 +233,19 @@ export default {
     .container {
         width: 90%;
     }
+
+    .informational-text {
+        width: 80%;
+    }
 }
 
 @media (min-width: 1024px) {
     .container {
         max-width: 64rem;
+    }
+
+    .informational-text {
+        width: 70%;
     }
 }
 </style>
