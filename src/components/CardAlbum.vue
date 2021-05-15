@@ -2,7 +2,10 @@
     <div class="album-container">
         <div class="album-container-header">
             <div>
-                <div v-show="showSkeletonImage" class="album-image-skeleton"></div>
+                <div
+                    v-show="showSkeletonImage"
+                    class="album-image-skeleton"
+                ></div>
                 <img
                     v-show="!showSkeletonImage"
                     :src="image()"
@@ -38,7 +41,9 @@
                     >
                         <!-- heroicons: chevron-down -->
                         <svg
-                            v-if="!show"
+                            :class="[
+                                show ? 'icon-arrow-down' : 'icon-arrow-up',
+                            ]"
                             class="icon-arrow"
                             fill="none"
                             stroke="currentColor"
@@ -52,34 +57,17 @@
                                 d="M19 9l-7 7-7-7"
                             ></path>
                         </svg>
-
-                        <!-- heroicons: chevron-up -->
-                        <svg
-                            v-else
-                            class="icon-arrow"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M5 15l7-7 7 7"
-                            ></path>
-                        </svg>
                     </div>
                 </div>
             </div>
         </div>
 
         <transition
-            @before-enter="beforeEnter"
-            @enter="enter"
-            @after-enter="afterEnter"
-            @before-leave="beforeLeave"
-            @leave="leave"
+            @before-enter="setHeightToCero"
+            @enter="setHeightToMax"
+            @after-enter="setHeightToMax"
+            @before-leave="setHeightToMax"
+            @leave="setHeightToCero"
         >
             <div v-show="show" class="album-container-body">
                 <div v-if="noDataMessage" class="message">No data</div>
@@ -145,10 +133,15 @@ export default {
         async loadAlbumData() {
             if (!this.fetchedData) {
                 this.loading = true;
-                this.tracks = await Spotify.getAlbum(this.album.id);
-                this.loading = false;
 
-                this.fetchedData = true;
+                Spotify.getAlbum(this.album.id)
+                    .then((data) => {
+                        this.tracks = data;
+                    })
+                    .finally(() => {
+                        this.fetchedData = true;
+                        this.loading = false;
+                    });
             }
 
             this.show = !this.show;
@@ -162,24 +155,12 @@ export default {
             return " ";
         },
 
-        beforeEnter(el) {
+        setHeightToCero(el) {
             el.style.height = "0";
         },
 
-        enter(el) {
+        setHeightToMax(el) {
             el.style.height = el.scrollHeight + "px";
-        },
-
-        afterEnter(el) {
-            el.style.height = el.scrollHeight + "px";
-        },
-
-        beforeLeave(el) {
-            el.style.height = el.scrollHeight + "px";
-        },
-
-        leave(el) {
-            el.style.height = "0";
         },
     },
 };
@@ -262,6 +243,16 @@ export default {
     cursor: pointer;
 }
 
+.icon-arrow-down {
+    transform: rotate(0deg);
+    transition: transform 0.2s linear;
+}
+
+.icon-arrow-up {
+    transform: rotate(-180deg);
+    transition: transform 0.2s linear;
+}
+
 .message {
     color: #ffffff;
     text-align: center;
@@ -300,12 +291,13 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .5;
-  }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
 @media (min-width: 640px) {
