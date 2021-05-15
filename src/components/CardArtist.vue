@@ -13,7 +13,6 @@
                     class="artist-image"
                     @load="showSkeletonImage = false"
                 />
-
                 <div v-if="!image" class="artist-image-default">
                     <!-- heroicons: user -->
                     <svg
@@ -32,7 +31,6 @@
                     </svg>
                 </div>
             </div>
-
             <div class="artist-details">
                 <div>
                     <div>
@@ -50,13 +48,10 @@
                         >
                         </span>
                     </div>
-
                     <div class="artist-followers" v-text="totalFollowers"></div>
                 </div>
-
                 <div class="icon-arrow-container">
                     <div v-if="loading" class="lds-circle"><div></div></div>
-
                     <div
                         v-else
                         class="icon-arrow-background"
@@ -84,7 +79,6 @@
                 </div>
             </div>
         </div>
-
         <transition
             @before-enter="setHeightToCero"
             @enter="setHeightToMax"
@@ -94,7 +88,6 @@
         >
             <div v-show="show" class="artist-container-body">
                 <div v-if="noDataMessage" class="message">No data</div>
-
                 <card-track
                     v-for="track in tracks"
                     :key="track.id"

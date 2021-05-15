@@ -14,7 +14,6 @@
                     @load="showSkeletonImage = false"
                 />
             </div>
-
             <div class="album-details">
                 <div>
                     <div>
@@ -25,15 +24,11 @@
                             v-text="album.name"
                         ></a>
                     </div>
-
                     <span class="album-info" v-text="albumArtists"></span>
-
                     <span class="album-info" v-text="albumInfo"></span>
                 </div>
-
                 <div class="icon-arrow-container">
                     <div v-if="loading" class="lds-circle"><div></div></div>
-
                     <div
                         v-else
                         class="icon-arrow-background"
@@ -61,7 +56,6 @@
                 </div>
             </div>
         </div>
-
         <transition
             @before-enter="setHeightToCero"
             @enter="setHeightToMax"
@@ -71,7 +65,6 @@
         >
             <div v-show="show" class="album-container-body">
                 <div v-if="noDataMessage" class="message">No data</div>
-
                 <card-track-small
                     v-for="track in tracks.items"
                     :key="track.id"

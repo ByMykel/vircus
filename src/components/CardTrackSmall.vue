@@ -1,6 +1,8 @@
 <template>
     <div
-        :class="{ 'new-disc': track.track_number === 1 && track.disc_number !== 1 }"
+        :class="{
+            'new-disc': track.track_number === 1 && track.disc_number !== 1,
+        }"
         class="track-container"
     >
         <span v-if="track.explicit" title="Explicit content">
@@ -18,10 +20,8 @@
                 ></path>
             </svg>
         </span>
-
         <div class="track-details">
             <div class="track-number" v-text="track.track_number"></div>
-
             <div>
                 <div v-if="track.preview_url">
                     <span
@@ -43,7 +43,6 @@
                             ></path>
                         </svg>
                     </span>
-
                     <span v-else class="icon-container" @click="stop()">
                         <!-- heroicons: stop -->
                         <svg
@@ -60,7 +59,6 @@
                         </svg>
                     </span>
                 </div>
-
                 <div v-else>
                     <span class="icon-container">
                         <!-- heroicons: play -->
@@ -79,7 +77,6 @@
                     </span>
                 </div>
             </div>
-
             <div>
                 <div>
                     <a
@@ -90,7 +87,6 @@
                     >
                     </a>
                 </div>
-
                 <div class="track-artists" v-text="artists"></div>
             </div>
         </div>

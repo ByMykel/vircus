@@ -7,9 +7,7 @@
             v-model="text"
             @keyup="$emit('search-artist', text)"
         />
-
         <search-options :selected="selected"></search-options>
-
         <!-- heroicons: search -->
         <svg
             class="search-icon"

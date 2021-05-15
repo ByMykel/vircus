@@ -15,9 +15,15 @@
                 ></path>
             </svg>
         </span>
-
         <div>
-            <div v-show="showSkeletonImage" :class="[ small ? 'track-image-small-skeleton' : 'track-image-skeleton' ]"></div>
+            <div
+                v-show="showSkeletonImage"
+                :class="[
+                    small
+                        ? 'track-image-small-skeleton'
+                        : 'track-image-skeleton',
+                ]"
+            ></div>
             <img
                 v-show="!showSkeletonImage"
                 :class="{ 'track-image-small': small }"
@@ -27,7 +33,6 @@
                 @load="showSkeletonImage = false"
             />
         </div>
-
         <div class="track-details">
             <div>
                 <div>
@@ -45,7 +50,6 @@
                     v-text="artists"
                 ></div>
             </div>
-
             <div v-if="track.preview_url">
                 <span v-if="!playing" @click="play()">
                     <!-- heroicons: play -->
@@ -62,7 +66,6 @@
                         ></path>
                     </svg>
                 </span>
-
                 <span v-else @click="stop()">
                     <!-- heroicons: stop -->
                     <svg
@@ -79,7 +82,6 @@
                     </svg>
                 </span>
             </div>
-
             <div v-else>
                 <span class="icon-container">
                     <!-- heroicons: play -->
@@ -187,7 +189,6 @@ export default {
 .track-image-small {
     width: 52px;
 }
-
 
 .track-image-small-skeleton {
     width: 52px;

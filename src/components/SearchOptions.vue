@@ -20,7 +20,6 @@
                 />
             </svg>
         </button>
-
         <button
             :class="{ 'button-selected': selected === 2 }"
             class="button-icon"
@@ -39,7 +38,6 @@
                 />
             </svg>
         </button>
-
         <button
             :class="{ 'button-selected': selected === 3 }"
             class="button-icon"
