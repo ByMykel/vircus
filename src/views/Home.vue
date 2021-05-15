@@ -5,13 +5,18 @@
             class="logo-spotify"
             alt="logo-spotify"
         />
-
         <search-bar
             :selected="selected"
             @search-artist="query = $event"
             @selected="changeSelected($event)"
         ></search-bar>
-
+        <div v-if="!query.length">
+            <img
+                src="../assets/undraw_compose_music_ovo2.svg"
+                class="no-data-image"
+                alt="no-data-image"
+            />
+        </div>
         <div v-if="selected === 1">
             <transition-group name="list-items">
                 <card-artist
@@ -21,7 +26,6 @@
                 ></card-artist>
             </transition-group>
         </div>
-
         <div v-else-if="selected === 2">
             <transition-group name="list-items">
                 <card-track
@@ -31,7 +35,6 @@
                 ></card-track>
             </transition-group>
         </div>
-
         <div v-else-if="selected === 3">
             <transition-group name="list-items">
                 <card-album
@@ -157,6 +160,15 @@ export default {
     margin: 0 auto;
     padding: 30px 0;
     width: 150px;
+}
+
+.no-data-image {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    margin: 50px auto 0 auto;
+    width: 100%;
+    height: 55vh;
 }
 
 .list-items-enter-active,
