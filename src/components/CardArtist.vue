@@ -165,7 +165,7 @@ export default {
             if (!this.fetchedData) {
                 this.loading = true;
 
-                Spotify.getArtistsTopTracks(this.artist.id)
+                await Spotify.getArtistsTopTracks(this.artist.id)
                     .then((data) => {
                         this.tracks = data;
                     })

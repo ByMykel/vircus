@@ -127,7 +127,7 @@ export default {
             if (!this.fetchedData) {
                 this.loading = true;
 
-                Spotify.getAlbum(this.album.id)
+                await Spotify.getAlbum(this.album.id)
                     .then((data) => {
                         this.tracks = data;
                     })
