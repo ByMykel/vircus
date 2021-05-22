@@ -1,30 +1,23 @@
 <template>
     <div class="container">
-        <img
-            src="../assets/Spotify_logo_with_text.svg"
-            class="logo-spotify"
-            alt="logo-spotify"
-        />
-        <p class="informational-text">
-            Simple project that allow you to search for artists, tracks and
-            albums, made for practice purposes. All the metadata is retrieved
-            from
-            <a href="https://www.spotify.com/" target="_blank">Spotify</a>
-            &nbsp;
-            <a href="https://developer.spotify.com/" target="_blank">Web API</a
-            >.
-        </p>
-        <search-bar
-            :selected="selected"
-            @search-artist="query = $event"
-            @selected="changeSelected($event)"
-        ></search-bar>
-        <div v-if="!query.length">
+        <div
+            :class="{ 'container-middle': centerContent }"
+            style="transition: 0.5s"
+        >
             <img
-                src="../assets/undraw_compose_music_ovo2.svg"
-                class="no-data-image"
-                alt="no-data-image"
+                src="../assets/Spotify_logo_with_text.svg"
+                class="logo-spotify"
+                alt="logo-spotify"
             />
+            <search-bar
+                :selected="selected"
+                @search-artist="query = $event"
+                @selected="changeSelected($event)"
+            ></search-bar>
+        </div>
+        <div v-if="items.total" style="color: #b3b3b3">
+            Found at least
+            <span style="color: white">{{ items.total }}</span> matches
         </div>
         <div v-if="selected === 1">
             <transition-group name="list-items">
@@ -79,6 +72,16 @@ export default {
             selected: 1,
             query: "",
         };
+    },
+
+    computed: {
+        centerContent() {
+            if (this.items instanceof Array) {
+                return !this.items.length;
+            }
+
+            return !this.items.items.length;
+        },
     },
 
     watch: {
@@ -164,20 +167,17 @@ export default {
     position: relative;
 }
 
+.container-middle {
+    transform: translateY(-50%);
+    margin-top: 50vh;
+    transition: 1s;
+}
+
 .logo-spotify {
     display: block;
     margin: 0 auto;
     padding: 30px 0;
     width: 150px;
-}
-
-.no-data-image {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    margin: 50px auto 0 auto;
-    width: 100%;
-    height: 55vh;
 }
 
 .list-items-enter-active,
@@ -207,22 +207,6 @@ export default {
     position: absolute;
 }
 
-.informational-text {
-    color: #b3b3b3;
-    text-align: center;
-    width: 90%;
-    margin: 0 auto 20px auto;
-    font-size: 14px;
-}
-
-.informational-text > a {
-    color: #b3b3b3;
-}
-
-.informational-text > a:hover {
-    color: #1db954;
-}
-
 @media (min-width: 640px) {
     .container {
         width: 95%;
@@ -233,19 +217,11 @@ export default {
     .container {
         width: 90%;
     }
-
-    .informational-text {
-        width: 80%;
-    }
 }
 
 @media (min-width: 1024px) {
     .container {
         max-width: 64rem;
-    }
-
-    .informational-text {
-        width: 70%;
     }
 }
 </style>
