@@ -22,7 +22,7 @@ function getFavoritesLocalStorage(name, page) {
 
     if (data !== null) {
         const favorites = JSON.parse(data)
-            .favorites.sort((a, b) => a.id.localeCompare(b.id))
+            .favorites.reverse()
             .filter((track) =>
                 track.name.toLowerCase().includes(name.toLowerCase())
             );
@@ -152,16 +152,12 @@ export default {
 
     async getFavorites(name, page = 1) {
         const favorites = getFavoritesLocalStorage(name, page);
-        
+
         if (!favorites.length) return { items: [], next: null };
 
         let tracks = [];
 
         for (let track of favorites) {
-            // await this.getTrackById(track.id).then((data) => {
-            //     tracks.push(data);
-            // });
-
             tracks.push(await this.getTrackById(track.id));
         }
 
