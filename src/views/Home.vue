@@ -46,6 +46,15 @@
                 ></card-album>
             </transition-group>
         </div>
+        <div v-else-if="selected === 4">
+            <transition-group name="list-items">
+                <card-track
+                    v-for="track in items.items"
+                    :key="track.id"
+                    :track="track"
+                ></card-track>
+            </transition-group>
+        </div>
     </div>
 </template>
 
@@ -95,6 +104,11 @@ export default {
                 document.documentElement.offsetHeight - 1;
 
             if (bottomOfWindow) {
+                if (this.selected === 4) {
+                    this.getMoreData(null);
+                    return;
+                }
+
                 this.getMoreData(this.items.next);
             }
         });
@@ -110,7 +124,7 @@ export default {
         },
 
         async fetchData() {
-            if (this.query === "") {
+            if (this.query === "" && this.selected !== 4) {
                 this.items = [];
                 return;
             }
@@ -126,6 +140,9 @@ export default {
                     break;
                 case 3:
                     data = await Spotify.getAlbums(this.query);
+                    break;
+                case 4:
+                    data = await Spotify.getFavorites(this.query);
                     break;
             }
 
@@ -146,6 +163,9 @@ export default {
                     break;
                 case 3:
                     data = (await Spotify.getMoreData(url)).albums;
+                    break;
+                case 4:
+                    data = await Spotify.getFavorites(this.query, this.items.next);
                     break;
             }
 

@@ -50,62 +50,98 @@
                     v-text="artists"
                 ></div>
             </div>
-            <div v-if="track.preview_url">
-                <span v-if="!playing" @click="play()">
-                    <!-- heroicons: play -->
-                    <svg
-                        class="icon icon-green"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clip-rule="evenodd"
-                        ></path>
-                    </svg>
-                </span>
-                <span v-else @click="stop()">
-                    <!-- heroicons: stop -->
-                    <svg
-                        class="icon icon-red"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
-                            clip-rule="evenodd"
-                        ></path>
-                    </svg>
-                </span>
-            </div>
-            <div v-else>
-                <span class="icon-container">
-                    <!-- heroicons: play -->
-                    <svg
-                        class="icon-disable"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clip-rule="evenodd"
-                        ></path>
-                    </svg>
-                </span>
+            <div class="track-actions">
+                <div v-if="track.preview_url">
+                    <span v-if="!playing" @click="play()">
+                        <!-- heroicons: play -->
+                        <svg
+                            class="icon icon-green"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </span>
+                    <span v-else @click="stop()">
+                        <!-- heroicons: stop -->
+                        <svg
+                            class="icon icon-red"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </span>
+                </div>
+                <div v-else>
+                    <span class="icon-container">
+                        <!-- heroicons: play -->
+                        <svg
+                            class="icon-disable"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </span>
+                </div>
+                <div @click="toggleFavorite(track)">
+                    <span v-if="has(track.id)" class="icon-container">
+                        <svg
+                            class="icon-heart icon-green"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                clip-rule="evenodd"
+                            ></path>
+                        </svg>
+                    </span>
+                    <span v-else class="icon-container">
+                        <svg
+                            class="icon-heart icon-gray"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                            ></path>
+                        </svg>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
-    name: "TrackCard",
+    name: "CardTrack",
 
     props: {
         track: Object,
@@ -121,12 +157,16 @@ export default {
     },
 
     computed: {
+        ...mapGetters("favorites", ["has"]),
+
         artists() {
             return this.track.artists.map((artist) => artist.name).join(" · ");
         },
     },
 
     methods: {
+        ...mapActions("favorites", ["toggle"]),
+
         play() {
             this.playing = true;
             this.audio.volume = 0.1;
@@ -147,6 +187,10 @@ export default {
             }
 
             return " ";
+        },
+
+        toggleFavorite(track) {
+            this.toggle({ id: track.id, name: track.name });
         },
     },
 };
@@ -230,11 +274,31 @@ export default {
     align-items: center;
 }
 
+.track-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .icon {
+    display: flex;
     width: 32px;
     height: 32px;
     cursor: pointer;
     margin-right: 10px;
+}
+
+.icon-heart {
+    display: flex;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+
+.icon-gray {
+    color: #b3b3b3;
 }
 
 .icon-green {
@@ -296,6 +360,12 @@ export default {
         align-items: flex-start;
     }
 
+    .track-actions {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+    }
+
     .track-image {
         width: 152px;
     }
@@ -331,6 +401,10 @@ export default {
     .icon-explicit {
         width: 20px;
         height: 20px;
+    }
+
+    .icon-heart {
+        margin-top: 0;
     }
 }
 </style>

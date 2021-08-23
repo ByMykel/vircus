@@ -49,7 +49,9 @@ export default {
         placeholder() {
             return (
                 "Search " +
-                { 1: "artists", 2: "tracks", 3: "albums" }[this.selected]
+                { 1: "artists", 2: "tracks", 3: "albums", 4: "favorites" }[
+                    this.selected
+                ]
             );
         },
     },
