@@ -4,17 +4,28 @@ const CLIENT_ID = process.env.VUE_APP_CLIENT_ID;
 const CLIENT_SECRET = process.env.VUE_APP_CLIENT_SECRET;
 
 async function getToken() {
-    const data = await axios({
-        baseURL: "https://accounts.spotify.com/api/token",
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: "Basic " + btoa(CLIENT_ID + ":" + CLIENT_SECRET),
-        },
-        data: "grant_type=client_credentials",
-    });
+    const expires = 0 + localStorage.getItem('pa_expires', '0');
+    if ((new Date()).getTime() > expires) {
+        const { data } = await axios({
+            baseURL: "https://accounts.spotify.com/api/token",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Authorization: "Basic " + btoa(CLIENT_ID + ":" + CLIENT_SECRET),
+            },
+            data: "grant_type=client_credentials",
+        });
 
-    return await data.data.access_token;
+        const token = data.access_token;
+
+        localStorage.setItem('pa_token', token);
+        localStorage.setItem('pa_expires', (new Date()).getTime() + data.expires_in * 1000);
+    
+        return token;
+    }
+
+
+    return localStorage.getItem('pa_token', '');
 }
 
 function getFavoritesLocalStorage(name, page) {
