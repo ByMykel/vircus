@@ -74,6 +74,7 @@ export default {
     padding: 12px 100px 12px 48px;
     margin-bottom: 20px;
     border: 0;
+    outline: none;
 }
 
 .search-icon {

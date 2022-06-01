@@ -109,9 +109,14 @@ export default {
     border-width: 0;
     border-radius: 9999px;
     cursor: pointer;
+    outline: none;
 }
 
 .button-icon:hover {
+    background: #535353;
+}
+
+.button-icon:focus {
     background: #535353;
 }
 
