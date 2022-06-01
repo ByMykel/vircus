@@ -18,7 +18,7 @@ export default {
 
 <style>
 * {
-    font-family: Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+    font-family: "Inter", sans-serif !important;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
